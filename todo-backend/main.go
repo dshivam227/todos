@@ -58,9 +58,12 @@ func main() {
     router.HandleFunc("/todos/{id}", deleteTodoById).Methods("DELETE")
 
     // Set up CORS
-    allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:3000"})
-    allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "DELETE"})
-    allowedHeaders := handlers.AllowedHeaders([]string{"Content-Type"})
+    allowedOrigins := handlers.AllowedOrigins([]string{
+        "http://localhost:3000", 
+        "https://todos-pxrfhp225-dshivam227s-projects.vercel.app",
+    })
+    allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "OPTIONS"})
+    allowedHeaders := handlers.AllowedHeaders([]string{"Content-Type", "Authorization", "X-Requested-With", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin"})
 
     log.Fatal(http.ListenAndServe(":8000", handlers.CORS(allowedOrigins, allowedMethods, allowedHeaders)(router)))
 }
