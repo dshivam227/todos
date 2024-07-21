@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 
+
+const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+console.log( backendUrl)
+
 function App() {
   const [todotext, settodotext] = useState([]);
   const [inputval, setinputval] = useState("");
@@ -22,7 +26,7 @@ function App() {
   }, [darkmode]);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/todos')
+    axios.get(`${backendUrl}/todos`)
       .then(response => settodotext(response.data))
       .catch(error => console.error('Error fetching todos:', error));
   }, []);
@@ -34,20 +38,20 @@ function App() {
   const handleSubmit = async () => {
     if (inputval.trim()) {
       const newTodo = { id: Date.now().toString(), text: inputval, completed: false };
-      await axios.post("http://localhost:8000/todos", newTodo);
+      await axios.post(`${backendUrl}/todos`, newTodo);
       settodotext([...todotext, newTodo]);
       setinputval("");
     }
   };
 
   const handleDelete = async () => {
-    await axios.delete("http://localhost:8000/todos");
+    await axios.delete(`${backendUrl}/todos`);
     settodotext([]);
   };
 
   const handleDeleteTask = async (indexToDelete) => {
     const todoToDelete = todotext[indexToDelete];
-    await axios.delete(`http://localhost:8000/todos/${todoToDelete.id}`);
+    await axios.delete(`${backendUrl}/todos/${todoToDelete.id}`);
     const newTodos = todotext.filter((_, index) => index !== indexToDelete);
     settodotext(newTodos);
   };
